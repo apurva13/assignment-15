@@ -3,14 +3,23 @@
 import sqlite3
 try:
     con=sqlite3.connect('Students.db')
-    print(con)
+    print('DATABASE CREATED')
+    cursor=con.cursor()
+    query='create table Students(name varchar(15),marks number(3) check (marks>=0 and marks<=100))'
+    cursor.execute(query)
+    print('TABLE CREATED')
+    con.commit()
+
 except sqlite3.DatabaseError as e:
     if con:
-        print('Problem Occured') 
+        con.rollback()
+        print('Problem Occured',e) 
 finally:
-    con.close()
-    print('DATABASE CREATED')
-
+     if cursor:
+        cursor.close()
+     if con:
+        con.close()
+     print("DONE!")
 #Q.2- Take students name and marks(between 0-100) as input from user 10 times using loops.
 info=[]
 for x in range(1,11):
@@ -18,26 +27,6 @@ for x in range(1,11):
     info.append((input('Name:'),int(input('Marks:'))))
 
 #Q.3- Add these values in two columns named "Name" and "Marks" with the appropriate data type.
-                #Creating Table
-import sqlite3
-try:
-    con=sqlite3.connect('Students.db')
-    cursor=con.cursor()
-    query='create table Students(name varchar(15),marks number(3) check (marks>=0 and marks<=100))'
-    cursor.execute(query)
-    print('TABLE CREATED')
-    con.commit()
-except sqlite3.DatabaseError as e:
-    if con:
-        con.rollback()
-        print('Problem Occured')
-finally:
-    if cursor:
-        cursor.close()
-    if con:
-        con.close()
-    print('DONE!')
-                #Inserting Values
 import sqlite3
 try:
     con=sqlite3.connect('Students.db')
@@ -55,7 +44,7 @@ try:
 except sqlite3.DatabaseError as e:
     if con:
         con.rollback()
-        print('Problem Occured')
+        print('Problem Occured',e)
 finally:
     if cursor:
         cursor.close()
